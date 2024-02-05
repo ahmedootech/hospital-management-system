@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import {
   OrderStatus,
   OrderType,
-  PaymentMode,
+  PaymentMethods,
 } from '../../common/types/order-types';
 
 import { ServiceDoc } from './service';
@@ -20,7 +20,7 @@ interface OrderAttrs {
   staff: string;
   items: OrderItem[];
   orderType: OrderType;
-  paymentMode: PaymentMode;
+  paymentMode: PaymentMethods;
   total: number;
   amountReceived: number;
   status: OrderStatus;
@@ -65,7 +65,7 @@ const orderSchema = new mongoose.Schema(
     paymentMode: {
       type: String,
       required: true,
-      enum: Object.values(PaymentMode),
+      enum: Object.values(PaymentMethods),
     },
     total: {
       type: Number,

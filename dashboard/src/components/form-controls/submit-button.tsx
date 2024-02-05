@@ -6,7 +6,7 @@ const SubmitButton: React.FC<{
   type?: 'button' | 'submit' | 'reset';
 }> = (props) => {
   return (
-    <div className="d-flex flex-co justify-content-end mt-2">
+    <div className="d-flex justify-content-end mt-2">
       <button
         className={`btn ${
           props.bg ? 'btn-' + props.bg : 'btn-success'

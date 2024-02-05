@@ -33,6 +33,7 @@ const Pos = (props) => {
   const [show, setShow] = useState(false);
   const [order, setOrder] = useState([]);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [paymentMethods, setPaymentMethods] = useState([]);
 
   const componentRef = useRef();
   const printButtonRef = useRef();
@@ -70,10 +71,14 @@ const Pos = (props) => {
     const getData = async () => {
       try {
         const res = await apiV1.get('/services');
+        const paymentMethodsRes = await apiV1.get('/orders/payment-methods');
+
+        setPaymentMethods(paymentMethodsRes.data);
         setServices(res.data);
         console.log(res);
       } catch (err) {
         console.log(err);
+        toast.error('Something went wrong');
       }
     };
     getData();
@@ -278,8 +283,11 @@ const Pos = (props) => {
                       name="paymentMode"
                       control={control}
                     >
-                      <option value="Cash">Cash</option>
-                      <option value="POS">POS</option>
+                      {paymentMethods.map((paymentMethod, index) => (
+                        <option value={paymentMethod} key={index}>
+                          {paymentMethod}
+                        </option>
+                      ))}
                     </Select>
                   </div>
 
@@ -336,7 +344,7 @@ export async function getServerSideProps(context: NextPageContext) {
   const cookies = context.req?.cookies;
   const { query } = context;
   const patientId = query.patientId;
-  console.log(patientId);
+
   if (!patientId) {
     return {
       redirect: {

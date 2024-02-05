@@ -10,6 +10,7 @@ import CalendarIcon from '@mui/icons-material/CalendarMonth';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import FolderIcon from '@mui/icons-material/FolderCopy';
 import PersonIcon from '@mui/icons-material/Person';
+import BedIcon from '@mui/icons-material/Hotel';
 
 const PatientList = () => {
   const [patients, setPatients] = useState([]);
@@ -33,9 +34,10 @@ const PatientList = () => {
             <thead>
               <tr>
                 <th>Patient Name</th>
-                <th>Phone</th>
+                <th>Age</th>
+                <th>Gender</th>
                 <th>Marital</th>
-                <th>Username</th>
+                <th>Phone</th>
                 <th>Address</th>
                 <th>Status</th>
                 <th>Options</th>
@@ -46,27 +48,14 @@ const PatientList = () => {
                 <tr key={index} className="align-middle">
                   <td className="text-nowrap">
                     <p className="py-0 my-0">{`${patient.firstName} ${patient.lastName}`}</p>
-                    <p className="form-text py-0 my-0 text-white">
-                      <span
-                        className={`bg-${
-                          patient.gender === 'Male' ? 'primary' : 'danger'
-                        } rounded-pill ps-1 pe-2`}
-                      >
-                        {patient.gender === 'Male' ? (
-                          <MaleIcon />
-                        ) : (
-                          <FemaleIcon />
-                        )}
-                        {String(patient.gender).split('')[0]}
-                      </span>{' '}
-                      <span className="bg-secondary bg-opacity-75  rounded-pill px-2">
-                        {formatDetailedAge(calculateDetailedAge(patient.dob))}
-                      </span>
-                    </p>
                   </td>
-                  <td>{patient.phone}</td>
+
+                  <td>
+                    {formatDetailedAge(calculateDetailedAge(patient.dob))}
+                  </td>
+                  <td>{patient.gender}</td>
                   <td>{patient.marital}</td>
-                  <td>{patient.username}</td>
+                  <td>{patient.phone}</td>
                   <td className="text-nowrap">{patient.address}</td>
                   <td>{patient.status}</td>
                   <td className="text-nowrap">
@@ -78,8 +67,16 @@ const PatientList = () => {
                       <MedicalServicesIcon />
                     </Link>
                     <Link
-                      href="/"
-                      className="btn btn-warning text-white py-0 px-1 mx-1"
+                      href={`/admissions/${patient.id}/admit`}
+                      className="btn bg-danger py-0 px-1  bg-opacity-75 text-white mx-1"
+                      title="Admit Patient"
+                    >
+                      <BedIcon />
+                    </Link>
+
+                    <Link
+                      href={`/appointments/${patient.id}/schedule-appointment`}
+                      className="btn btn-warning text-white py-0 px-1 me-1"
                       title="Make appointment"
                     >
                       <CalendarIcon />

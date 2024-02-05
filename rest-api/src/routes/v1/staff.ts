@@ -8,6 +8,16 @@ import { Staff } from '../../models/v1/staff';
 const router = Router();
 
 router.get(
+  '/doctors',
+  [currentUser, requireAuth, authorization(['Admin', 'Manager'])],
+  async (req: Request, res: Response) => {
+    const doctors = await Staff.find({ role: 'Doctor' })
+      .limit(20)
+      .populate(['department']);
+    res.json(doctors);
+  }
+);
+router.get(
   '/',
   [currentUser, requireAuth, authorization(['Admin', 'Manager'])],
   async (req: Request, res: Response) => {

@@ -9,9 +9,23 @@ export enum OrderType {
   Online = 'Online',
 }
 
-export enum PaymentMode {
+export enum PaymentMethods {
   Cash = 'Cash',
   POS = 'POS',
   Transfer = 'Transfer',
-  OnlIne = 'Online',
+  Online = 'Online',
+  Admission = 'Admission',
+}
+
+export enum AdmissionStatus {
+  Admitted = 'Admitted',
+  Discharged = 'Discharged',
+  Transferred = 'Transferred',
+}
+
+export enum AppointmentStatus {
+  Scheduled = 'Scheduled',
+  Completed = 'Completed',
+  Cancelled = 'Cancelled',
+  Rescheduled = 'Rescheduled',
 }

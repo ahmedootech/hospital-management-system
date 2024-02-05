@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import { Order, OrderItem } from '../../models/v1/order';
 import { Service } from '../../models/v1/service';
 import { BadRequestError } from '../../common/errors/bad-request-error';
-import { OrderStatus } from '../../common/types/order-types';
+import { OrderStatus, PaymentMethods } from '../../common/types/order-types';
 
 const router = Router();
 
@@ -77,5 +77,9 @@ router.post(
     }
   }
 );
+
+router.get('/payment-methods', (req, res) => {
+  res.json(Object.keys(PaymentMethods));
+});
 
 export { router as v1OrderRoutes };

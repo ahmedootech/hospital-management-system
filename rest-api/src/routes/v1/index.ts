@@ -5,6 +5,9 @@ import { v1DepartmentRoutes } from './department';
 import { v1ServiceRoutes } from './service';
 import { v1StaffRoutes } from './staff';
 import { v1OrderRoutes } from './orders';
+import { v1RoomRoutes } from './rooms';
+import { v1AdmissionRoutes } from './admissions';
+import { v1AppointmentRoutes } from './appointments';
 
 const router = Router();
 
@@ -14,5 +17,8 @@ router.use('/staffs', v1StaffRoutes);
 router.use('/departments', v1DepartmentRoutes);
 router.use('/services', v1ServiceRoutes);
 router.use('/orders', v1OrderRoutes);
+router.use('/rooms', v1RoomRoutes);
+router.use('/admissions', v1AdmissionRoutes);
+router.use('/appointments', v1AppointmentRoutes);
 
 export { router as v1Routes };

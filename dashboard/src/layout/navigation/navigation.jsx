@@ -17,17 +17,19 @@ const navigation = () => {
             label: 'Upcoming Appointments',
             path: '/appointments/upcoming-appointments',
           },
-          {
-            label: 'Schedule Appointment',
-            path: '/appointments/schedule-appointment',
-          },
+          // {
+          //   label: 'Schedule Appointment',
+          //   path: '/appointments/schedule-appointment',
+          // },
         ],
       },
       {
         label: 'Patients',
         children: [
-          { label: 'Patient List', path: '/patients/' },
           { label: 'Add New Patient', path: '/patients/add-patient' },
+          { label: 'Inpatients', path: '/patients/in-patients' },
+          { label: 'Outpatients', path: '/patients/out-patients' },
+          { label: 'Patient List', path: '/patients/' },
         ],
       },
 
@@ -50,6 +52,13 @@ const navigation = () => {
         children: [
           { label: 'Department List', path: '/departments/' },
           { label: 'Add New Department', path: '/departments/add-department' },
+        ],
+      },
+      {
+        label: 'Rooms',
+        children: [
+          { label: 'Room List', path: '/rooms/' },
+          { label: 'Add New Room', path: '/rooms/add-room' },
         ],
       },
       {

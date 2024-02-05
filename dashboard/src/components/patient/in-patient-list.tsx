@@ -10,16 +10,17 @@ import CalendarIcon from '@mui/icons-material/CalendarMonth';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import FolderIcon from '@mui/icons-material/FolderCopy';
 import PersonIcon from '@mui/icons-material/Person';
+import BedIcon from '@mui/icons-material/Hotel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import EditIcon from '@mui/icons-material/Edit';
 
-const StaffList = () => {
-  const [staffs, setStaffs] = useState([]);
+const InPatientList = () => {
+  const [admissions, setAdmissions] = useState([]);
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await apiV1.get('/staffs');
-        setStaffs(res.data);
+        const res = await apiV1.get('/admissions/admitted');
+        console.log(res);
+        setAdmissions(res.data);
         console.log(res);
       } catch (err) {
         console.log(err);
@@ -29,75 +30,65 @@ const StaffList = () => {
   }, []);
   return (
     <>
-      {staffs.length ? (
+      {admissions.length ? (
         <div className="table-responsive">
           <table className="table table-sm">
             <thead>
               <tr>
-                <th>Staff Name</th>
+                <th>Patient Name</th>
+                <th>Age</th>
                 <th>Gender</th>
-                <th>Phone</th>
-                <th>Role</th>
-                <th>Department</th>
-                <th>Marital</th>
-                <th>Username</th>
-                <th>Address</th>
+                <th>Doctor</th>
+                <th>Room</th>
+                <th>Admitted On</th>
                 <th>Status</th>
                 <th>Options</th>
               </tr>
             </thead>
             <tbody>
-              {staffs.map((staff, index) => (
+              {admissions.map((admission, index) => (
                 <tr key={index} className="align-middle">
                   <td className="text-nowrap">
-                    <p className="py-0 my-0">{`${staff.firstName} ${staff.lastName}`}</p>
+                    <p className="py-0 my-0">{`${admission.patient.firstName} ${admission.patient.lastName}`}</p>
                   </td>
+
                   <td>
-                    <span
-                      className={`bg-${
-                        staff.gender === 'Male' ? 'primary' : 'danger'
-                      } rounded-pill ps-1 pe-2 text-white`}
-                    >
-                      {staff.gender === 'Male' ? <MaleIcon /> : <FemaleIcon />}
-                      {String(staff.gender).split('')[0]}
-                    </span>
+                    {formatDetailedAge(
+                      calculateDetailedAge(admission.patient.dob)
+                    )}
                   </td>
-                  <td>{staff.phone}</td>
-                  <td>{staff.role}</td>
-                  <td>{staff.department.name}</td>
-                  <td>{staff.marital}</td>
-                  <td>{staff.username}</td>
-                  <td className="text-nowrap">{staff.address}</td>
-                  <td>{staff.status}</td>
+                  <td>{admission.patient.gender}</td>
+                  <td>{`${admission.doctor.firstName} ${admission.doctor.lastName}`}</td>
+                  <td>{admission.room.name}</td>
+                  {/* <td>{admission.patient.username}</td> */}
+                  <td className="text-nowrap">
+                    {new Date(admission.createdAt).toLocaleString()}
+                  </td>
+                  <td className="text-nowrap">{admission.status}</td>
+
                   <td className="text-nowrap">
                     <Link
-                      href="/"
+                      href={`/admissions/${admission.patient.id}`}
                       className="btn bg-success py-0 px-1  bg-opacity-75 text-white"
-                      title="Provide Service"
+                      title="Explore admission"
                     >
                       <VisibilityIcon />
                     </Link>
+
                     <Link
-                      href="/"
-                      className="btn btn-warning text-white py-0 px-1 mx-1"
-                      title="Make appointment"
-                    >
-                      <EditIcon />
-                    </Link>
-                    {/* <Link
-                      href="/"
-                      className="btn btn-info py-0 px-1 text-white"
+                      href={`/patients/${admission.patient.id}/records`}
+                      className="btn btn-info py-0 px-1 mx-1 text-white"
                       title="Medical Records"
                     >
                       <FolderIcon />
                     </Link>
                     <Link
-                      href="/"
-                      className="btn btn-success py-0 px-1 ms-1"
-                      title="Staff Profile"
+                      href={`/patients/${admission.patient.id}`}
+                      className="btn btn-success py-0 px-1"
+                      title="Patient Profile"
                     >
                       <PersonIcon />
-                    </Link> */}
+                    </Link>
                   </td>
                 </tr>
               ))}
@@ -110,4 +101,4 @@ const StaffList = () => {
     </>
   );
 };
-export default StaffList;
+export default InPatientList;

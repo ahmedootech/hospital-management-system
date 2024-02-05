@@ -1,14 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { validateRequest } from '../../../common/middlewares/validate-request';
-import { body } from 'express-validator';
-import jwt from 'jsonwebtoken';
-import { BadRequestError } from '../../../common/errors/bad-request-error';
 import { requireAuth } from '../../../common/middlewares/require-auth';
-import { authorization } from '../../../common/middlewares/authorization';
 import { currentUser } from '../../../common/middlewares/current-user';
-import { PasswordManager } from '../../../services/password-manager';
-import { NotFoundError } from '../../../common/errors/not-found-error';
-import { Staff } from '../../../models/v1/staff';
 import { staffAuthRouter } from './staff';
 import { patientAuthRouter } from './patient';
 

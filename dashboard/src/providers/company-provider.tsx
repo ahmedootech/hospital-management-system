@@ -14,15 +14,15 @@ interface companyProviderType {
   logoURL: string;
 }
 const defaultValues = {
-  companyName: 'FMH',
+  companyName: 'SALSA',
   address: {
-    street: 'No 38, Lamido Road, Nasarawa GRA',
+    street: 'No 38, Nasarawa GRA',
     city: '',
     state: 'Kano State',
     postalCode: '',
     country: 'Nigeria',
   },
-  phone: '09033221121',
+  phone: '+2348039903923',
   email: '',
   logoURL: '',
 };
