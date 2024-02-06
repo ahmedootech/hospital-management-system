@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-
 import { apiV1 } from '../../utils/axios-instance';
-import { calculateDetailedAge, formatDetailedAge } from '../../utils/date';
-
-import MaleIcon from '@mui/icons-material/Male';
-import FemaleIcon from '@mui/icons-material/Female';
-import CalendarIcon from '@mui/icons-material/CalendarMonth';
-import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
-import FolderIcon from '@mui/icons-material/FolderCopy';
 import PersonIcon from '@mui/icons-material/Person';
-import BedIcon from '@mui/icons-material/Hotel';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
+import EventRepeatIcon from '@mui/icons-material/EventRepeat';
+import Modal from 'react-bootstrap/Modal';
+import AppointmentForm from './appointment-form';
+import { toast } from 'react-toastify';
 
 const TodayAppointmentsList = () => {
   const [appointments, setAppointments] = useState([]);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   useEffect(() => {
     const getData = async () => {
       try {
@@ -27,6 +26,18 @@ const TodayAppointmentsList = () => {
     };
     getData();
   }, []);
+
+  const cancelAppointmentHandler = async (appointmentId) => {
+    try {
+      const res = await apiV1.put(`/appointments/${appointmentId}`, {
+        status: 'Cancelled',
+      });
+      toast.success('Appointment cancelled');
+    } catch (err) {
+      console.log(err);
+      toast.error('Something went wrong');
+    }
+  };
   return (
     <>
       {appointments.length ? (
@@ -62,14 +73,21 @@ const TodayAppointmentsList = () => {
                   <td>{appointment.status}</td>
 
                   <td className="text-nowrap">
-                    <Link
-                      href={`/appointments/${appointment.patient.id}/schedule-appointment`}
-                      className="btn btn-warning text-white py-0 px-1 me-1"
+                    <button
+                      className="btn btn-secondary text-white py-0 px-1 me-1"
                       title="Reschedule appointment"
+                      onClick={handleShow}
                     >
-                      <CalendarIcon />
-                    </Link>
-
+                      <EventRepeatIcon />
+                    </button>
+                    <button
+                      className="btn btn-danger text-white py-0 px-1 me-1"
+                      title="Cancel appointment"
+                      disabled={appointment.status === 'Cancelled'}
+                      onClick={() => cancelAppointmentHandler(appointment.id)}
+                    >
+                      <EventBusyIcon />
+                    </button>
                     <Link
                       href={`/patients/${appointment.patient.id}`}
                       className="btn btn-success py-0 px-1"
@@ -86,6 +104,14 @@ const TodayAppointmentsList = () => {
       ) : (
         <p>No Record Found</p>
       )}
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Reschedule Appointment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="py-4 pb-5">
+          <AppointmentForm patientId={selectedPatient?.id} updateMode />
+        </Modal.Body>
+      </Modal>
     </>
   );
 };

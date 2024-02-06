@@ -13,6 +13,7 @@ import { requireAuth } from '../../common/middlewares/require-auth';
 import { currentUser } from '../../common/middlewares/current-user';
 import { Appointment } from '../../models/v1/appointment';
 import { validateRequest } from '../../common/middlewares/validate-request';
+import mongoose from 'mongoose';
 
 const router = Router();
 
@@ -48,7 +49,7 @@ router.get(
     const todayEnd = endOfDay(new Date());
     const tomorrowStart = startOfDay(addDays(new Date(), 1));
     const appointments = await Appointment.find({
-      status: 'Scheduled',
+      //   status: 'Scheduled',
       dateTime: {
         $gte: todayEnd,
         // $gte: tomorrowStart,
@@ -79,6 +80,17 @@ router.get(
 router.get('/statuses', (req: Request, res: Response) => {
   const statuses = Object.values(AppointmentStatus);
   res.json(statuses);
+});
+
+router.put('/:appointmentId', async (req: Request, res: Response) => {
+  const { appointmentId } = req.params;
+  console.log(appointmentId);
+  const appointment = await Appointment.findByIdAndUpdate(
+    appointmentId,
+    { status: req.body.status },
+    { new: true }
+  );
+  res.send(appointment);
 });
 
 export { router as v1AppointmentRoutes };

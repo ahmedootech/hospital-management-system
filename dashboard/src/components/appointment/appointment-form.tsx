@@ -14,7 +14,7 @@ const defaultValues = {
   dateTime: new Date(),
   doctor: '',
 };
-const AppointmentForm = ({ patientId }) => {
+const AppointmentForm = ({ patientId, updateMode = false }) => {
   const [doctors, setDoctors] = useState([]);
   useEffect(() => {
     const getData = async () => {
@@ -65,11 +65,15 @@ const AppointmentForm = ({ patientId }) => {
   };
   return (
     <form onSubmit={methods.handleSubmit(appointmentSubmitHandler)}>
-      <div className="row">
-        <div className="col-lg-2 d-flex align-items-center">
+      <div className={`row ${updateMode ? 'flex-colum' : ''}`}>
+        <div
+          className={`${
+            updateMode ? 'col-lg-4' : 'col-lg-2'
+          } d-flex align-items-center`}
+        >
           <HorizontalLabel label="Appointment date" />
         </div>
-        <div className="col-lg-5">
+        <div className={`${updateMode ? 'col-lg-8' : 'col-lg-5'}`}>
           <Input
             type="datetime-local"
             name="dateTime"
@@ -80,10 +84,14 @@ const AppointmentForm = ({ patientId }) => {
       </div>
 
       <div className="row">
-        <div className="col-lg-2 d-flex align-items-center">
+        <div
+          className={`${
+            updateMode ? 'col-lg-4' : 'col-lg-2'
+          } d-flex align-items-center`}
+        >
           <HorizontalLabel label="Scheduling Doctor" />
         </div>
-        <div className="col-lg-5">
+        <div className={`${updateMode ? 'col-lg-8' : 'col-lg-5'}`}>
           <Select control={methods.control} name="doctor">
             <option value="">---Select Doctor---</option>
             {doctors.map((doctor, index) => (
@@ -93,9 +101,11 @@ const AppointmentForm = ({ patientId }) => {
             ))}
           </Select>
         </div>
-        <div className="row gx-2">
-          <div className="col-lg-7">
-            <SubmitButton label="Make Appointment" />
+        <div className="ro">
+          <div className="">
+            <SubmitButton
+              label={updateMode ? 'Update Appointment' : 'Make Appointment'}
+            />
           </div>
         </div>
       </div>
