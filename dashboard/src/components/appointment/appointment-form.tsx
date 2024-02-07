@@ -13,6 +13,7 @@ import { handleYupErrors } from '../../utils/yup-form-helpers';
 const defaultValues = {
   dateTime: new Date(),
   doctor: '',
+  type: '',
 };
 const AppointmentForm = ({ patientId, updateMode = false }) => {
   const [doctors, setDoctors] = useState([]);
@@ -34,6 +35,7 @@ const AppointmentForm = ({ patientId, updateMode = false }) => {
       .typeError('invalid date')
       .required('appointment date is required'),
     doctor: yup.string().required('doctor not selected'),
+    type: yup.string().required('meeting type not selected'),
   });
   const methods = useForm({
     defaultValues,
@@ -99,6 +101,22 @@ const AppointmentForm = ({ patientId, updateMode = false }) => {
                 {`${doctor.firstName} ${doctor.lastName}`}
               </option>
             ))}
+          </Select>
+        </div>
+      </div>
+      <div className="row">
+        <div
+          className={`${
+            updateMode ? 'col-lg-4' : 'col-lg-2'
+          } d-flex align-items-center`}
+        >
+          <HorizontalLabel label="Meeting Type" />
+        </div>
+        <div className={`${updateMode ? 'col-lg-8' : 'col-lg-5'}`}>
+          <Select control={methods.control} name="type">
+            <option value="">---Select Meeting Type---</option>
+            <option value="In Hospital">In Hospital</option>
+            <option value="Virtual">Virtual</option>
           </Select>
         </div>
         <div className="ro">

@@ -23,15 +23,17 @@ router.post(
   [
     body('patient').notEmpty().withMessage('Patient is required'),
     body('doctor').notEmpty().withMessage('Doctor is required'),
+    body('type').notEmpty().withMessage('Meeting type is required'),
     body('dateTime').trim().isISO8601().withMessage('Only date is allowed'),
   ],
   [validateRequest],
   async (req: Request, res: Response) => {
-    const { patient, doctor, dateTime } = req.body;
+    const { patient, doctor, dateTime, type } = req.body;
 
     const appointment = Appointment.build({
       patient,
       doctor,
+      type,
       dateTime,
       createdBy: req.user.id,
     });

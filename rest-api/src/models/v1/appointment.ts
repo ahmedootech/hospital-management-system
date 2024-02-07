@@ -6,6 +6,9 @@ interface AppointmentAttr {
   patient: string;
   doctor: string;
   dateTime: Date;
+  type: string;
+  duration?: number;
+  meetingLink?: string;
   status?:
     | AppointmentStatus.Scheduled
     | AppointmentStatus.Cancelled
