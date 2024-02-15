@@ -8,34 +8,60 @@ import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import { toast } from 'react-toastify';
 import Modal from 'react-bootstrap/Modal';
 import AppointmentForm from './appointment-form';
+import { AppointmentHeader, AppointmentItem } from './partials';
+import { useRouter } from 'next/router';
 
 const UpcomingAppointmentsList = () => {
+  const router = useRouter();
   const [appointments, setAppointments] = useState([]);
-  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const showRescheduleFormHandler = (appointment) => {
+    setSelectedAppointment(appointment);
+    setShow(true);
+  };
 
+  const getData = async () => {
+    try {
+      const res = await apiV1.get('/appointments/upcoming-schedules');
+      console.log(res);
+      setAppointments(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const res = await apiV1.get('/appointments/upcoming-schedules');
-        console.log(res);
-        setAppointments(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
     getData();
   }, []);
 
+  const updateAppointmentStatus = async (
+    appointmentId,
+    status: 'Cancelled' | 'Completed'
+  ) => {
+    try {
+      return await apiV1.put(`/appointments/${appointmentId}`, { status });
+    } catch (err) {
+      throw err;
+    }
+  };
   const cancelAppointmentHandler = async (appointmentId) => {
     try {
-      const res = await apiV1.put(`/appointments/${appointmentId}`, {
-        status: 'Cancelled',
-      });
+      await updateAppointmentStatus(appointmentId, 'Cancelled');
       toast.success('Appointment cancelled');
+      getData();
+    } catch (err) {
+      console.log(err);
+      toast.error('Something went wrong');
+    }
+  };
+  const attendAppointmentHandler = async (appointment) => {
+    try {
+      await updateAppointmentStatus(appointment.id, 'Completed');
+      toast.success('Appointment completed');
+      router.replace(`/pos/${appointment.patient.id}/serve`);
+      // getData();
     } catch (err) {
       console.log(err);
       toast.error('Something went wrong');
@@ -46,66 +72,20 @@ const UpcomingAppointmentsList = () => {
       {appointments.length ? (
         <div className="table-responsive">
           <table className="table table-sm">
-            <thead>
-              <tr>
-                <th>Patient Name</th>
-                <th>Gender</th>
-                <th>Doctor</th>
-                <th>Scheduled Date</th>
-                <th>Date Created</th>
-                <th>Status</th>
-                <th>Options</th>
-              </tr>
-            </thead>
+            <AppointmentHeader />
             <tbody>
               {appointments.map((appointment, index) => (
-                <tr key={index} className="align-middle">
-                  <td className="text-nowrap">
-                    <p className="py-0 my-0">{`${appointment.patient.firstName} ${appointment.patient.lastName}`}</p>
-                  </td>
-
-                  <td>{appointment.patient.gender}</td>
-                  <td>{`${appointment.doctor.firstName} ${appointment.doctor.lastName}`}</td>
-
-                  <td className="text-nowrap">
-                    {new Date(appointment.dateTime).toLocaleString()}
-                  </td>
-                  <td className="text-nowrap">
-                    {new Date(appointment.createdAt).toLocaleString()}
-                  </td>
-                  <td
-                    className={`${
-                      appointment.status === 'Cancelled' ? 'text-danger' : ''
-                    } `}
-                  >
-                    {appointment.status}
-                  </td>
-
-                  <td className="text-nowrap">
-                    <button
-                      className="btn btn-secondary text-white py-0 px-1 me-1"
-                      title="Reschedule appointment"
-                      onClick={handleShow}
-                    >
-                      <EventRepeatIcon />
-                    </button>
-                    <button
-                      className="btn btn-danger text-white py-0 px-1 me-1"
-                      title="Cancel appointment"
-                      disabled={appointment.status === 'Cancelled'}
-                      onClick={() => cancelAppointmentHandler(appointment.id)}
-                    >
-                      <EventBusyIcon />
-                    </button>
-                    <Link
-                      href={`/patients/${appointment.patient.id}`}
-                      className="btn btn-success py-0 px-1"
-                      title="Patient Profile"
-                    >
-                      <PersonIcon />
-                    </Link>
-                  </td>
-                </tr>
+                <AppointmentItem
+                  key={index}
+                  appointment={appointment}
+                  cancelAppointmentHandler={cancelAppointmentHandler}
+                  showRescheduleFormHandler={() =>
+                    showRescheduleFormHandler(appointment)
+                  }
+                  attendAppointmentHandler={() =>
+                    attendAppointmentHandler(appointment)
+                  }
+                />
               ))}
             </tbody>
           </table>
@@ -119,7 +99,12 @@ const UpcomingAppointmentsList = () => {
           <Modal.Title>Reschedule Appointment</Modal.Title>
         </Modal.Header>
         <Modal.Body className="py-4 pb-5">
-          <AppointmentForm patientId={selectedPatient?.id} updateMode />
+          <AppointmentForm
+            patientId={selectedAppointment?.patient.id}
+            appointment={selectedAppointment}
+            updateMode
+            updateListHandler={getData}
+          />
         </Modal.Body>
       </Modal>
     </>

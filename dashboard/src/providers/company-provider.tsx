@@ -14,7 +14,7 @@ interface companyProviderType {
   logoURL: string;
 }
 const defaultValues = {
-  companyName: 'SALSA',
+  companyName: 'FMH',
   address: {
     street: 'No 38, Nasarawa GRA',
     city: '',
@@ -22,7 +22,7 @@ const defaultValues = {
     postalCode: '',
     country: 'Nigeria',
   },
-  phone: '+2348039903923',
+  phone: '+2348020000002',
   email: '',
   logoURL: '',
 };

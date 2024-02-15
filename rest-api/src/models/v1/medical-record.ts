@@ -1,27 +1,35 @@
 import mongoose from 'mongoose';
 
 interface MedicalRecordAttrs {
-  patientId: string;
+  patient: string;
   date: Date;
-  doctorId: string;
-  prescription: [
+  clinicalNotes: string;
+  diagnosis: [
     {
-      medicationName: String;
-      dosage: String;
-      frequency: String;
+      description: string;
+      prescription: [
+        {
+          medicationName: string;
+          dosage: string;
+          frequency: string;
+        }
+      ];
+      doctor: string;
     }
   ];
   labResults: [
     {
-      testType: String;
-      result: String;
+      testType: string;
+      result: string;
+      servedBy: string;
     }
   ];
   imagingReports: [
     {
-      imagingType: String;
-      report: String;
-      imageUrl: String;
+      imagingType: string;
+      report: string;
+      imageUrl: string;
+      servedBy: string;
     }
   ];
 }
@@ -33,15 +41,15 @@ interface MedicalRecordModel extends mongoose.Model<MedicalRecordDoc> {
 }
 
 const medicalRecordSchema = new mongoose.Schema({
-  patientId: {
+  patient: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Patient',
     required: true,
   },
   date: { type: Date, default: Date.now },
-  doctorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' }, // Reference to the doctor who created the record
-  clinicalNotes: String,
-  diagnosis: String,
+  doctor: { type: mongoose.Schema.Types.ObjectId, ref: 'Staff' }, // Reference to the doctor who created the record
+  clinicalNotes: { type: String, required: true },
+  diagnosis: { type: String, required: true },
   prescriptions: [
     {
       medicationName: String,
@@ -53,6 +61,7 @@ const medicalRecordSchema = new mongoose.Schema({
     {
       testType: String,
       result: String,
+      servedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Staff' },
     },
   ],
   imagingReports: [

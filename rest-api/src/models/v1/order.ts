@@ -8,12 +8,15 @@ import {
 import { ServiceDoc } from './service';
 import { transformDocument } from '../../services/mongoose-utils';
 
-export interface OrderItem {
-  service: ServiceDoc;
+export interface OrderItem extends mongoose.Document {
+  service: mongoose.Types.ObjectId | ServiceDoc;
   quantity: number;
   price: number;
-  id: string;
   total: number;
+  status: string;
+  id: string;
+  patient?: any;
+  servedBy?: string;
 }
 
 interface OrderAttrs {
@@ -25,6 +28,7 @@ interface OrderAttrs {
   amountReceived: number;
   status: OrderStatus;
   patient: string;
+  createdAt?: Date;
 }
 
 interface OrderDoc extends OrderAttrs, mongoose.Document {}
@@ -36,6 +40,7 @@ interface OrderModel extends mongoose.Model<OrderDoc> {
 const orderSchema = new mongoose.Schema(
   {
     staff: {
+      // staff that attended to the patient
       type: String,
       required: true,
       ref: 'Staff',
@@ -59,6 +64,15 @@ const orderSchema = new mongoose.Schema(
         total: {
           type: Number,
           required: true,
+        },
+        status: {
+          type: String,
+          default: OrderStatus.Pending,
+          enum: Object.values(OrderStatus),
+        },
+        servedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Staff',
         },
       },
     ],

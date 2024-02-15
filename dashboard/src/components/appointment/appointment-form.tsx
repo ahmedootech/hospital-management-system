@@ -14,9 +14,18 @@ const defaultValues = {
   dateTime: new Date(),
   doctor: '',
   type: '',
+  duration: 0,
+  meetingLink: '',
 };
-const AppointmentForm = ({ patientId, updateMode = false }) => {
+const AppointmentForm = ({
+  patientId,
+  appointment = null,
+  updateMode = false,
+  updateListHandler = null,
+}) => {
   const [doctors, setDoctors] = useState([]);
+  const [selectedType, setSelectedType] = useState(null);
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -36,7 +45,10 @@ const AppointmentForm = ({ patientId, updateMode = false }) => {
       .required('appointment date is required'),
     doctor: yup.string().required('doctor not selected'),
     type: yup.string().required('meeting type not selected'),
+    duration: yup.number().typeError('invalid duration'),
+    meetingLink: yup.string(),
   });
+
   const methods = useForm({
     defaultValues,
     mode: 'onChange',
@@ -44,15 +56,23 @@ const AppointmentForm = ({ patientId, updateMode = false }) => {
   });
 
   const appointmentSubmitHandler = async (data: any) => {
+    let method = updateMode ? 'put' : 'post';
     try {
-      const res = await apiV1.post('/appointments/schedule-appointment', {
+      const res = await apiV1[method]('/appointments/schedule-appointment', {
         ...data,
         patient: patientId,
+        appointmentId: appointment?.id,
       });
+      console.log(res);
       methods.reset(defaultValues);
       toast.success('Appointment scheduled successfully');
+      updateListHandler?.();
     } catch (err) {
       console.log(err);
+      if (!err.response) {
+        toast.error(err.message);
+        return;
+      }
       const errors = err.response.data.errors;
       if (errors[0].field) {
         handleYupErrors({
@@ -77,10 +97,11 @@ const AppointmentForm = ({ patientId, updateMode = false }) => {
         </div>
         <div className={`${updateMode ? 'col-lg-8' : 'col-lg-5'}`}>
           <Input
-            type="datetime-local"
+            type="date"
             name="dateTime"
             placeholder="Appointment date"
             control={methods.control}
+            required
           />
         </div>
       </div>
@@ -113,19 +134,59 @@ const AppointmentForm = ({ patientId, updateMode = false }) => {
           <HorizontalLabel label="Meeting Type" />
         </div>
         <div className={`${updateMode ? 'col-lg-8' : 'col-lg-5'}`}>
-          <Select control={methods.control} name="type">
+          <Select
+            control={methods.control}
+            name="type"
+            onChange={(event) => setSelectedType(event.target.value)}
+          >
             <option value="">---Select Meeting Type---</option>
             <option value="In Hospital">In Hospital</option>
             <option value="Virtual">Virtual</option>
           </Select>
         </div>
-        <div className="ro">
-          <div className="">
-            <SubmitButton
-              label={updateMode ? 'Update Appointment' : 'Make Appointment'}
-            />
+      </div>
+      {selectedType === 'Virtual' && (
+        <>
+          <div className="row">
+            <div
+              className={`${
+                updateMode ? 'col-lg-4' : 'col-lg-2'
+              } d-flex align-items-center`}
+            >
+              <HorizontalLabel label="Meeting Duration" />
+            </div>
+            <div className={`${updateMode ? 'col-lg-8' : 'col-lg-5'}`}>
+              <Input
+                type="number"
+                name="duration"
+                placeholder="Meeting duration"
+                control={methods.control}
+              />
+            </div>
           </div>
-        </div>
+          <div className="row">
+            <div
+              className={`${
+                updateMode ? 'col-lg-4' : 'col-lg-2'
+              } d-flex align-items-center`}
+            >
+              <HorizontalLabel label="Meeting Link" />
+            </div>
+            <div className={`${updateMode ? 'col-lg-8' : 'col-lg-5'}`}>
+              <Input
+                type="url"
+                name="meetingLink"
+                placeholder="Meeting Link"
+                control={methods.control}
+              />
+            </div>
+          </div>
+        </>
+      )}
+      <div className="">
+        <SubmitButton
+          label={updateMode ? 'Update Appointment' : 'Make Appointment'}
+        />
       </div>
     </form>
   );

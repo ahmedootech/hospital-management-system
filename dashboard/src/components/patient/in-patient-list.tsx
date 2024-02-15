@@ -76,14 +76,14 @@ const InPatientList = () => {
                     </Link>
 
                     <Link
-                      href={`/patients/${admission.patient.id}/records`}
+                      href={`/patients/${admission.patient.id}/medical-history`}
                       className="btn btn-info py-0 px-1 mx-1 text-white"
                       title="Medical Records"
                     >
                       <FolderIcon />
                     </Link>
                     <Link
-                      href={`/patients/${admission.patient.id}`}
+                      href={`/patients/${admission.patient.id}/profile`}
                       className="btn btn-success py-0 px-1"
                       title="Patient Profile"
                     >

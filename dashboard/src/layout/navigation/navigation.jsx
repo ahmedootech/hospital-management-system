@@ -6,6 +6,23 @@ const navigation = () => {
   if (['Manager', 'Admin'].includes('Admin')) {
     return [
       {
+        label: 'Tasks',
+        children: [
+          {
+            label: 'Pending Tasks',
+            path: '/tasks/pending-tasks',
+          },
+          {
+            label: 'My Tasks',
+            path: '/tasks/my-tasks',
+          },
+          {
+            label: 'Recent Tasks',
+            path: '/tasks/recent-tasks',
+          },
+        ],
+      },
+      {
         label: 'Appointments',
         children: [
           // {label : 'POS'},
@@ -17,10 +34,6 @@ const navigation = () => {
             label: 'Upcoming Appointments',
             path: '/appointments/upcoming-appointments',
           },
-          // {
-          //   label: 'Schedule Appointment',
-          //   path: '/appointments/schedule-appointment',
-          // },
         ],
       },
       {

@@ -52,16 +52,7 @@ const StaffList = () => {
                   <td className="text-nowrap">
                     <p className="py-0 my-0">{`${staff.firstName} ${staff.lastName}`}</p>
                   </td>
-                  <td>
-                    <span
-                      className={`bg-${
-                        staff.gender === 'Male' ? 'primary' : 'danger'
-                      } rounded-pill ps-1 pe-2 text-white`}
-                    >
-                      {staff.gender === 'Male' ? <MaleIcon /> : <FemaleIcon />}
-                      {String(staff.gender).split('')[0]}
-                    </span>
-                  </td>
+                  <td>{staff.gender}</td>
                   <td>{staff.phone}</td>
                   <td>{staff.role}</td>
                   <td>{staff.department.name}</td>

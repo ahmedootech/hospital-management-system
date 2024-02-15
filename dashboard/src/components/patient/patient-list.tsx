@@ -82,14 +82,14 @@ const PatientList = () => {
                       <CalendarIcon />
                     </Link>
                     <Link
-                      href="/"
+                      href={`/patients/${patient.id}/medical-history`}
                       className="btn btn-info py-0 px-1 text-white"
                       title="Medical Records"
                     >
                       <FolderIcon />
                     </Link>
                     <Link
-                      href="/"
+                      href={`/patients/${patient.id}/profile`}
                       className="btn btn-success py-0 px-1 ms-1"
                       title="Patient Profile"
                     >

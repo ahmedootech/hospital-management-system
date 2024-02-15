@@ -28,21 +28,19 @@ router.post(
     authorization(['Admin', 'Manager', 'Receptionist']),
   ],
   async (req: Request, res: Response) => {
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    // const session = await mongoose.startSession();
+    // session.startTransaction();
     const { orderType, paymentMode, items, amountReceived, patient } = req.body;
 
     try {
       let orderTotal = 0;
       const orderedItems = await Promise.all(
         items.map(async (item: OrderItem) => {
-          const service = await Service.findById(item.id).populate(
-            'department'
-          );
+          const service = await Service.findById(item.id);
 
           if (!service)
             throw new BadRequestError(
-              `Order failed, one of your service +${item.id}`
+              `Order failed, one of your service +${item.id} does not exist`
             );
 
           item.price = service.price;
@@ -55,25 +53,25 @@ router.post(
       );
 
       const order = Order.build({
-        staff: req.user.id,
+        staff: req.user.id, // the cashier that create the order
         paymentMode,
         items: orderedItems,
         orderType,
         total: orderTotal,
-        status: OrderStatus.Complete,
+        status: OrderStatus.Pending,
         amountReceived,
         patient,
       });
 
-      await order.save({ session });
+      await order.save();
       await order.populate(['staff', 'patient']);
-      await session.commitTransaction();
+      // await session.commitTransaction();
       res.status(201).send(order);
     } catch (err) {
-      await session.abortTransaction();
+      // await session.abortTransaction();
       throw err;
     } finally {
-      session.endSession();
+      // session.endSession();
     }
   }
 );

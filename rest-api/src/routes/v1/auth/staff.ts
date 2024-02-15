@@ -102,6 +102,7 @@ router.post(
 
     if (!passwordsMatch) throw new BadRequestError('Invalid credentials');
 
+    console.log(existingStaff);
     // Generate JWT
     const userJwt = jwt.sign(
       {
@@ -109,6 +110,7 @@ router.post(
         name: `${existingStaff.firstName} ${existingStaff.lastName}`,
         username: existingStaff.username,
         role: existingStaff.role,
+        department: existingStaff.department.toString(),
       },
       process.env.JWT_KEY!
     );

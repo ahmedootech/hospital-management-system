@@ -76,7 +76,10 @@ const TodayAppointmentsList = () => {
                     <button
                       className="btn btn-secondary text-white py-0 px-1 me-1"
                       title="Reschedule appointment"
-                      onClick={handleShow}
+                      onClick={() => {
+                        setSelectedPatient(appointment.patient);
+                        handleShow();
+                      }}
                     >
                       <EventRepeatIcon />
                     </button>

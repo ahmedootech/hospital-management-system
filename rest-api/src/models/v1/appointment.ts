@@ -16,6 +16,7 @@ interface AppointmentAttr {
     | AppointmentStatus.Rescheduled;
   createdBy: string;
   createdAt?: Date;
+  rescheduledAppointment?: string;
 }
 
 interface AppointmentDoc extends AppointmentAttr, mongoose.Document {}
@@ -41,6 +42,12 @@ const appointmentSchema = new mongoose.Schema(
       type: Date,
       require: true,
     },
+    type: {
+      type: String,
+      required: true,
+    },
+    duration: Number,
+    meetingLink: String,
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       require: true,
@@ -49,6 +56,10 @@ const appointmentSchema = new mongoose.Schema(
     status: {
       type: String,
       default: AppointmentStatus.Scheduled,
+    },
+    rescheduledAppointment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Appointment',
     },
   },
   {

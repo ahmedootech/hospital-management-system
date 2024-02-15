@@ -8,6 +8,7 @@ import { v1OrderRoutes } from './orders';
 import { v1RoomRoutes } from './rooms';
 import { v1AdmissionRoutes } from './admissions';
 import { v1AppointmentRoutes } from './appointments';
+import { v1TaskRoutes } from './tasks';
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.use('/orders', v1OrderRoutes);
 router.use('/rooms', v1RoomRoutes);
 router.use('/admissions', v1AdmissionRoutes);
 router.use('/appointments', v1AppointmentRoutes);
+router.use('/tasks', v1TaskRoutes);
 
 export { router as v1Routes };
