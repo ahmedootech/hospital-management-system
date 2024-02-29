@@ -9,9 +9,11 @@ import FemaleIcon from '@mui/icons-material/Female';
 import CalendarIcon from '@mui/icons-material/CalendarMonth';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import FolderIcon from '@mui/icons-material/FolderCopy';
+import FolderOffIcon from '@mui/icons-material/FolderOff';
 import PersonIcon from '@mui/icons-material/Person';
 import BedIcon from '@mui/icons-material/Hotel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { isAuthorized } from '../../utils';
 
 const InPatientList = () => {
   const [admissions, setAdmissions] = useState([]);
@@ -40,7 +42,7 @@ const InPatientList = () => {
                 <th>Gender</th>
                 <th>Doctor</th>
                 <th>Room</th>
-                <th>Admitted On</th>
+                <th>Admitted Since</th>
                 <th>Status</th>
                 <th>Options</th>
               </tr>
@@ -62,7 +64,10 @@ const InPatientList = () => {
                   <td>{admission.room.name}</td>
                   {/* <td>{admission.patient.username}</td> */}
                   <td className="text-nowrap">
-                    {new Date(admission.createdAt).toLocaleString()}
+                    {/* {new Date(admission.createdAt).toLocaleString()} */}
+                    {formatDetailedAge(
+                      calculateDetailedAge(admission.createdAt)
+                    )}
                   </td>
                   <td className="text-nowrap">{admission.status}</td>
 
@@ -75,13 +80,21 @@ const InPatientList = () => {
                       <VisibilityIcon />
                     </Link>
 
-                    <Link
-                      href={`/patients/${admission.patient.id}/medical-history`}
-                      className="btn btn-info py-0 px-1 mx-1 text-white"
-                      title="Medical Records"
-                    >
-                      <FolderIcon />
-                    </Link>
+                    {isAuthorized(['Admin', 'Nurse', 'Doctor']) && (
+                      <Link
+                        href={{
+                          pathname: `/patients/${admission.patient.id}/medical-record`,
+                          query: {
+                            patientName: `${admission.patient.firstName} ${admission.patient.lastName}`,
+                          },
+                        }}
+                        className="btn btn-info py-0 px-1 mx-1 text-white"
+                        title="Medical Records"
+                      >
+                        <FolderIcon />
+                      </Link>
+                    )}
+
                     <Link
                       href={`/patients/${admission.patient.id}/profile`}
                       className="btn btn-success py-0 px-1"
@@ -89,6 +102,19 @@ const InPatientList = () => {
                     >
                       <PersonIcon />
                     </Link>
+                    {isAuthorized([
+                      'Admin',
+                      'Manager',
+                      'Receptionist',
+                      'Cashier',
+                    ]) && (
+                      <button
+                        className="btn btn-danger py-0 px-1 mx-1 text-white"
+                        title="Discharge"
+                      >
+                        <FolderOffIcon />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

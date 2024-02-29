@@ -10,7 +10,7 @@ router.get(
   '/',
   [currentUser, requireAuth, authorization(['Admin', 'Manager', 'Cashier'])],
   async (req: Request, res: Response) => {
-    const patients = await Patient.find({}).limit(20);
+    const patients = await Patient.find({}).limit(20).sort({ _id: -1 });
     res.json(patients);
   }
 );

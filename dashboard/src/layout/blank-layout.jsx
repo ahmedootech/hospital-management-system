@@ -16,6 +16,7 @@ const BlankLayout = (props) => {
                 {props.children}
                 <p className="mt-3 form-text text-center">
                   Copyright &copy; {company.companyName} 2023
+                  {/* Project developed by Salisu Gerawa */}
                 </p>
               </div>
             </div>

@@ -5,12 +5,17 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { useCompany } from '../../hooks/useCompany';
 import Logo from '../logo';
+import { useEffect, useState } from 'react';
 
 const NavMenu = () => {
   const router = useRouter();
-  const navItems = navigation();
-  const company = useCompany();
+  const [navItems, setNavItems] = useState([]);
 
+  const company = useCompany();
+  useEffect(() => {
+    const navItems = navigation();
+    setNavItems(navItems);
+  }, []);
   const handleLogOut = () => {
     Cookies.remove('token');
     Cookies.remove('user');

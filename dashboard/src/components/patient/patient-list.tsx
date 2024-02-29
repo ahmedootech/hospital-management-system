@@ -11,6 +11,7 @@ import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import FolderIcon from '@mui/icons-material/FolderCopy';
 import PersonIcon from '@mui/icons-material/Person';
 import BedIcon from '@mui/icons-material/Hotel';
+import { isAuthorized } from '../../utils';
 
 const PatientList = () => {
   const [patients, setPatients] = useState([]);
@@ -81,13 +82,21 @@ const PatientList = () => {
                     >
                       <CalendarIcon />
                     </Link>
-                    <Link
-                      href={`/patients/${patient.id}/medical-history`}
-                      className="btn btn-info py-0 px-1 text-white"
-                      title="Medical Records"
-                    >
-                      <FolderIcon />
-                    </Link>
+
+                    {isAuthorized(['Admin', 'Nurse', 'Doctor']) && (
+                      <Link
+                        href={{
+                          pathname: `/patients/${patient.id}/medical-record`,
+                          query: {
+                            patientName: `${patient.firstName} ${patient.lastName}`,
+                          },
+                        }}
+                        className="btn btn-info py-0 px-1 text-white"
+                        title="Medical Records"
+                      >
+                        <FolderIcon />
+                      </Link>
+                    )}
                     <Link
                       href={`/patients/${patient.id}/profile`}
                       className="btn btn-success py-0 px-1 ms-1"

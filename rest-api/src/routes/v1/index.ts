@@ -9,6 +9,8 @@ import { v1RoomRoutes } from './rooms';
 import { v1AdmissionRoutes } from './admissions';
 import { v1AppointmentRoutes } from './appointments';
 import { v1TaskRoutes } from './tasks';
+import { v1MedicalRecordRoutes } from './medical-records';
+import { v1DashboardRoutes } from './dashboard';
 
 const router = Router();
 
@@ -22,5 +24,7 @@ router.use('/rooms', v1RoomRoutes);
 router.use('/admissions', v1AdmissionRoutes);
 router.use('/appointments', v1AppointmentRoutes);
 router.use('/tasks', v1TaskRoutes);
+router.use('/medical-records', v1MedicalRecordRoutes);
+router.use('/dashboards', v1DashboardRoutes);
 
 export { router as v1Routes };

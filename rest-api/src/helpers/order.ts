@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import moment from 'moment'
+
 import { Order, OrderItem } from '../models/v1/order';
 import { OrderStatus } from '../common/types/order-types';
 
@@ -56,6 +58,7 @@ export async function findMyPendingTask(
         path: 'items.service',
         //match: { department: departmentId }, // Match services in the specific department
       })
+      .sort({ _id: -1 })
 
       .exec();
 
@@ -78,6 +81,54 @@ export async function findMyPendingTask(
     );
 
     return pendingOrderItems;
+  } catch (error) {
+    console.error('Error finding pending order items:', error);
+    throw error;
+  }
+}
+
+export async function findMyTodayCompletedTask(
+  staffId: string,
+  departmentId: string | undefined = undefined
+) {
+  try {
+    const todayStart = moment().startOf('day').toDate();
+    const todayEnd = moment().endOf('day').toDate();
+
+    // Find today orders where status is completed to a staff
+    const pendingOrders = await Order.find({
+      'items.status': OrderStatus['Complete'],
+      'items.servedBy': staffId,
+      createdAt: { $gte: todayStart, $lte: todayEnd }
+    })
+      .populate(['patient', 'staff'])
+      .populate({
+        path: 'items.service',
+        //match: { department: departmentId }, // Match services in the specific department
+      })
+      .sort({ _id: -1 })
+
+      .exec();
+
+    // Filter order items to only include pending items
+    const completedOrderItemsToday: OrderItem[] = pendingOrders.reduce(
+      (accumulator: OrderItem[], order) => {
+        const pendingItemsInOrder = order.items.filter(
+          (item) => item.status === OrderStatus['Complete']
+        );
+        const completedItemsInOrderWithPatientInfo: OrderItem[] =
+          pendingItemsInOrder.map((orderItem) => ({
+            ...orderItem.toJSON(),
+            patient: order.patient,
+            staff: order.staff,
+            date: order.createdAt,
+          }));
+        return accumulator.concat(completedItemsInOrderWithPatientInfo);
+      },
+      []
+    );
+
+    return completedOrderItemsToday;
   } catch (error) {
     console.error('Error finding pending order items:', error);
     throw error;

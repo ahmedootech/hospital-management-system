@@ -1,102 +1,155 @@
-// MedicalRecordComponent.js
+import RemoveIcon from '@mui/icons-material/Remove';
+import Image from 'next/image';
+import { useState } from 'react';
+import { Modal } from 'react-bootstrap';
+import { imagePreview, isAuthorized, prepareImageUrl } from '../../utils';
+const MedicalRecord = ({ record }) => {
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [imagePath, setImagePath] = useState(null);
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5000/api';
-
-function MedicalRecordComponent({ medicalRecordId }) {
-  const [medicalRecord, setMedicalRecord] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchMedicalRecord() {
-      try {
-        const response = await axios.get(
-          `${API_BASE_URL}/medical-records/${medicalRecordId}`
-        );
-        setMedicalRecord(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching medical record:', error);
-      }
-    }
-
-    fetchMedicalRecord();
-  }, [medicalRecordId]);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (!medicalRecord) {
-    return <p>Medical record not found</p>;
-  }
-
+  const handleCloseImageModal = () => setShowImageModal(false);
+  const handleShowImageModal = () => setShowImageModal(true);
   return (
-    <div>
-      <h2>Medical Record</h2>
-      <p>
-        <strong>Patient ID:</strong> {medicalRecord.patientId}
-      </p>
-      <p>
-        <strong>Date:</strong>{' '}
-        {new Date(medicalRecord.date).toLocaleDateString()}
-      </p>
-      <p>
-        <strong>Doctor ID:</strong> {medicalRecord.doctorId}
-      </p>
-      <p>
-        <strong>Clinical Notes:</strong> {medicalRecord.clinicalNotes}
-      </p>
-      <p>
-        <strong>Diagnosis:</strong> {medicalRecord.diagnosis}
-      </p>
-      <h3>Prescriptions</h3>
-      <ul>
-        {medicalRecord.prescriptions.map((prescription, index) => (
-          <li key={index}>
-            <p>
-              <strong>Medication Name:</strong> {prescription.medicationName}
-            </p>
-            <p>
-              <strong>Dosage:</strong> {prescription.dosage}
-            </p>
-            <p>
-              <strong>Frequency:</strong> {prescription.frequency}
-            </p>
-          </li>
-        ))}
-      </ul>
-      <h3>Lab Results</h3>
-      <ul>
-        {medicalRecord.labResults.map((labResult, index) => (
-          <li key={index}>
-            <p>
-              <strong>Test Type:</strong> {labResult.testType}
-            </p>
-            <p>
-              <strong>Result:</strong> {labResult.result}
-            </p>
-          </li>
-        ))}
-      </ul>
-      <h3>Imaging Reports</h3>
-      <ul>
-        {medicalRecord.imagingReports.map((imagingReport, index) => (
-          <li key={index}>
-            <p>
-              <strong>Imaging Type:</strong> {imagingReport.imagingType}
-            </p>
-            <p>
-              <strong>Report:</strong> {imagingReport.report}
-            </p>
-            <img src={imagingReport.imageUrl} alt={`Imaging Report ${index}`} />
-          </li>
-        ))}
-      </ul>
+    <div className="container-fluid bg-light p-3 my-2">
+      <h6>
+        {new Date(record.dateOfVisit).toDateString()}{' '}
+        {new Date(record.dateOfVisit).toLocaleTimeString()}
+      </h6>
+      {isAuthorized(['Nurse', 'Doctor']) && record.vitalSigns.length > 0 && (
+        <div>
+          <h5>Vital Signs</h5>
+          <div className="px-3">
+            {record.vitalSigns.map((vitalSign, index) => (
+              <div key={index}>
+                <h6>
+                  <RemoveIcon />
+                  By:{' '}
+                  {`${vitalSign.servedBy.firstName} ${vitalSign.servedBy.lastName}`}{' '}
+                  at: {new Date(vitalSign.createdAt).toLocaleString()}{' '}
+                </h6>
+                <ul>
+                  {vitalSign.signs.map((sign, index) => (
+                    <li key={index}>
+                      {sign.name}: {sign.value}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {isAuthorized(['Nurse', 'Doctor']) && record.clinicalNotes.length > 0 && (
+        <div>
+          <h5>Clinical Notes</h5>
+          <div className="px-3">
+            {record.clinicalNotes.map((clinicalNote, index) => (
+              <div key={index} className="bg-white p-2 my-2">
+                <h6 className="fw-bold">
+                  By:{' '}
+                  {`${clinicalNote.servedBy.firstName} ${clinicalNote.servedBy.lastName}`}{' '}
+                  at: {new Date(clinicalNote.createdAt).toLocaleString()}{' '}
+                </h6>
+                <p className="px-3">
+                  <span className="fw-bold">Clinical Note: </span>
+                  <pre className="ps-3">{clinicalNote.note}</pre>
+                </p>
+                <p className="px-3">
+                  <span className="fw-bold">Diagnosis: </span>
+                  <pre className="ps-3">{clinicalNote.diagnosis}</pre>
+                </p>
+                {clinicalNote.prescriptions.length > 0 && (
+                  <div className="px-3">
+                    <h6 className="fw-bold mb-0">Prescriptions</h6>
+                    <table className="table ms-2">
+                      <thead>
+                        <tr>
+                          <th>Medication</th>
+                          <th>Dosage</th>
+                          <th>Frequency</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {clinicalNote.prescriptions?.map(
+                          (prescription, index) => (
+                            <tr key={index}>
+                              <td>{prescription.medicationName}</td>
+                              <td>{prescription.dosage}</td>
+                              <td>{prescription.frequency}</td>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {record.investigations.length > 0 && (
+        <div>
+          <h5>Investigations</h5>
+          <div className="px-3">
+            {record.investigations.map((investigation, index) => (
+              <div key={index} className="bg-white p-2 my-2">
+                <h6 className="fw-bold">
+                  By:{' '}
+                  {`${investigation.servedBy.firstName} ${investigation.servedBy.lastName}`}{' '}
+                  at: {new Date(investigation.createdAt).toLocaleString()}{' '}
+                </h6>
+                <p className="px-3 py-0 my-0">
+                  <span className="fw-bold">
+                    {investigation.investigation.name}:{' '}
+                  </span>
+                  {investigation.result}
+                </p>
+                {investigation.remark && (
+                  <p className="px-3">
+                    <span className="fw-bold">Remark: </span>
+                    <pre className="ps-3">{investigation.remark}</pre>
+                  </p>
+                )}
+                {investigation.imageURL && (
+                  <button
+                    className="ms-3 btn btn-secondary"
+                    onClick={() => {
+                      setImagePath(investigation.imageURL);
+                      handleShowImageModal();
+                    }}
+                  >
+                    View Investigation Image
+                  </button>
+                  // <p className="px-3">
+                  //   <span className="fw-bold">Remark: </span>
+                  //   <pre className="ps-3">{investigation.remark}</pre>
+                  // </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <Modal show={showImageModal} onHide={handleCloseImageModal} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Investigation Image</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="py-4">
+          <Image
+            className=""
+            src={prepareImageUrl(imagePath)}
+            alt={`Image Preview`}
+            width={200}
+            height={300}
+            style={{ objectFit: 'cover', width: '100%' }}
+          />
+          {/* <NursesAssessmentForm patientId={patientId} /> */}
+        </Modal.Body>
+      </Modal>
     </div>
   );
-}
+};
 
-export default MedicalRecordComponent;
+export default MedicalRecord;

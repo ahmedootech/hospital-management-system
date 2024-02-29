@@ -5,6 +5,7 @@ import { currentUser } from '../../common/middlewares/current-user';
 import { requireAuth } from '../../common/middlewares/require-auth';
 import { authorization } from '../../common/middlewares/authorization';
 import { Service } from '../../models/v1/service';
+import { Department } from '../../models/v1/department';
 import { RequestValidationError } from '../../common/errors/request-validation-error';
 
 const router = Router();
@@ -52,8 +53,38 @@ router.post(
 );
 
 router.get(
+  '/investigations',
+  [
+    currentUser,
+    requireAuth,
+    authorization(['Admin', 'Manager', 'Lab Technician']),
+  ],
+  async (req: Request, res: Response) => {
+    
+    const investigationDepartments = await Department.find({
+      name: { $in: ['Laboratory', 'Radiography'] },
+    });
+
+    const departmentIds = investigationDepartments.map(
+      (department) => department._id
+    );
+
+    const services = await Service.find({
+      department: { $in: departmentIds },
+    })
+      .populate(['department'])
+      .limit(20);
+    res.json(services);
+  }
+);
+
+router.get(
   '/',
-  [currentUser, requireAuth, authorization(['Admin', 'Manager'])],
+  [
+    currentUser,
+    requireAuth,
+    authorization(['Admin', 'Manager', 'Lab Technician']),
+  ],
   async (req: Request, res: Response) => {
     const services = await Service.find({}).populate(['department']).limit(20);
     res.json(services);

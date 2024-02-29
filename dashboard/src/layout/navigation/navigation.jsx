@@ -1,10 +1,11 @@
-// import { useAuth } from '../../../auth/hooks/use-auth';
-
+import Cookies from 'js-cookie';
 const navigation = () => {
-  // const auth = useAuth();
+  const role = Cookies.get('role');
 
-  if (['Manager', 'Admin'].includes('Admin')) {
-    return [
+  let myNav = [];
+
+  if (['Doctor', 'Nurse', 'Lab Technician', 'Radiologist'].includes(role)) {
+    myNav = myNav.concat([
       {
         label: 'Tasks',
         children: [
@@ -22,10 +23,14 @@ const navigation = () => {
           },
         ],
       },
+    ]);
+  }
+
+  if (['Cashier', 'Receptionist', 'Admin'].includes(role)) {
+    myNav = myNav.concat([
       {
         label: 'Appointments',
         children: [
-          // {label : 'POS'},
           {
             label: 'Today Appointments',
             path: '/appointments/today-appointments',
@@ -41,11 +46,15 @@ const navigation = () => {
         children: [
           { label: 'Add New Patient', path: '/patients/add-patient' },
           { label: 'Inpatients', path: '/patients/in-patients' },
-          { label: 'Outpatients', path: '/patients/out-patients' },
+          // { label: 'Outpatients', path: '/patients/out-patients' },
           { label: 'Patient List', path: '/patients/' },
         ],
       },
+    ]);
+  }
 
+  if (['Manager', 'Admin'].includes(role)) {
+    myNav = myNav.concat([
       {
         label: 'Staff',
         children: [
@@ -74,67 +83,10 @@ const navigation = () => {
           { label: 'Add New Room', path: '/rooms/add-room' },
         ],
       },
-      {
-        label: 'Billing',
-        children: [
-          { label: 'Invoices', path: '/billings/invoices' },
-          { label: 'Payments', path: '/billings/payments' },
-          { label: 'Billing Reports', path: '/billings/reports' },
-        ],
-      },
-      {
-        label: 'Reports',
-        children: [
-          { label: 'Today', path: '/reports/today' },
-          { label: 'Range Report', path: '/reports/range-report' },
-        ],
-      },
-
-      // {
-      //   label: 'Sales',
-      //   path: '/reports',
-      //   children: [
-      //     { label: 'Sales point', path: '/sales/sales-point' },
-      //     { label: 'Today sales', path: '/sales/today' },
-      //     { label: 'Sales list', path: '/sales' },
-      //   ],
-      // },
-      // {
-      //   label: 'Products',
-      //   path: '/products',
-      //   children: [
-      //     { label: 'Stock in', path: '/products/stock-in' },
-      //     { label: 'Products', path: '/products' },
-      //     { label: 'Categories', path: '/products/categories' },
-      //   ],
-      // },
-      // {
-      //   label: 'Users',
-      //   path: '/users',
-      //   children: [{ label: 'Users', path: '/users' }],
-      // },
-      // {
-      //   label: 'Suppliers',
-      //   path: '/suppliers',
-      // },
-      // {
-      //   label: 'Customers',
-      //   path: '/suppliers',
-      // },
-    ];
-  } else if (['Sales'].includes(auth.user.role)) {
-    return [
-      {
-        label: 'Sales',
-        path: '/reports',
-        children: [
-          { label: 'Sales point', path: '/sales/sales-point' },
-          { label: 'My sales', path: '/sales/my-sales' },
-        ],
-      },
-    ];
+    ]);
   }
 
-  return [];
+  return myNav;
 };
+
 export default navigation;

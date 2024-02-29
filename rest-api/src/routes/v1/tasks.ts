@@ -26,8 +26,9 @@ router.get(
   '/my-task',
   [currentUser, requireAuth],
   async (req: Request, res: Response) => {
-    const pendingTasks = await findMyPendingTask(req.user.id);
-    res.send(pendingTasks);
+    const myPendingTasks = await findMyPendingTask(req.user.id);
+
+    res.send(myPendingTasks);
   }
 );
 
@@ -40,6 +41,20 @@ router.put(
       taskId,
       req.user.id,
       OrderStatus['In Progress']
+    );
+    res.send(updatedTask);
+  }
+);
+
+router.put(
+  '/:taskId/completed',
+  [currentUser, requireAuth],
+  async (req: Request, res: Response) => {
+    const taskId = req.params.taskId;
+    const updatedTask = await updateOrderItemStatus(
+      taskId,
+      req.user.id,
+      OrderStatus['Complete']
     );
     res.send(updatedTask);
   }

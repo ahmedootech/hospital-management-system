@@ -21,7 +21,11 @@ export const TaskHeader = () => {
     </thead>
   );
 };
-export const TaskItem = ({ task, pickTaskHandler }) => {
+export const TaskItem = ({
+  task,
+  pickTaskHandler = () => {},
+  completeTaskHandler = () => {},
+}) => {
   return (
     <tr>
       <td>{task.service.name}</td>
@@ -39,13 +43,22 @@ export const TaskItem = ({ task, pickTaskHandler }) => {
             <CheckIcon />
           </button>
         ) : (
-          <Link
-            href={`/patients/${task.patient.id}/add-medical-record`}
-            className="btn btn-info py-0 px-1 text-white"
-            title="Medical Records"
-          >
-            <NoteAddIcon />
-          </Link>
+          <>
+            <Link
+              href={`/patients/${task.patient.id}/medical-record`}
+              className="btn btn-info py-0 px-1 text-white me-1"
+              title="Medical Records"
+            >
+              <NoteAddIcon />
+            </Link>
+            <button
+              className="btn btn-success py-0 px-1 text-white"
+              title="Complete Task"
+              onClick={completeTaskHandler}
+            >
+              <CheckIcon />
+            </button>
+          </>
         )}
       </td>
     </tr>

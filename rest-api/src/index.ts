@@ -22,6 +22,7 @@ app.use(json());
 // app.get('/', (req, res) => {
 //   res.send('Hello Hospital');
 // });
+app.use(express.static('public'));
 app.use('/api/v1', v1Routes);
 
 app.all('*', async (req, res) => {

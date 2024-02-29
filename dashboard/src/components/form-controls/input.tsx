@@ -13,6 +13,7 @@ interface InputProps {
   control: Control;
   disabled?: boolean;
   value?: string;
+  list?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
@@ -25,6 +26,7 @@ const Input: React.FC<InputProps> = ({
   disabled,
   control,
   value,
+  list,
   onChange,
   onFocus,
   onBlur,
@@ -47,6 +49,7 @@ const Input: React.FC<InputProps> = ({
               className={`form-control py-2 px-2 shadow-none`}
               placeholder={placeholder ? placeholder : label}
               value={value ? value : field.value}
+              list={list}
               {...field}
               disabled={disabled}
               onChange={(event) => {

@@ -3,6 +3,7 @@ import { TaskHeader, TaskItem } from './partials';
 import { apiV1 } from '../../utils/axios-instance';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import React from 'react';
 
 const MyTaskList = () => {
   const router = useRouter();
@@ -20,11 +21,11 @@ const MyTaskList = () => {
   useEffect(() => {
     getData();
   }, []);
-  const pickTaskHandler = async (taskId) => {
+  const completeTaskHandler = async (taskId) => {
     try {
-      const res = await apiV1.put(`/tasks/${taskId}/pick`);
-      toast.success('Task Picked Successfully');
-      router.push('/tasks/my-tasks');
+      const res = await apiV1.put(`/tasks/${taskId}/completed`);
+      toast.success('Task Completed Successfully');
+      getData();
     } catch (err) {
       toast.error(err.response.data.errors[0].message);
       console.log(err);
@@ -37,11 +38,11 @@ const MyTaskList = () => {
           <table className="table table-sm">
             <TaskHeader />
             <tbody>
-              {tasks.map((task, index) => (
+              {tasks.map((task: any, index) => (
                 <TaskItem
                   task={task}
                   key={index}
-                  pickTaskHandler={() => pickTaskHandler(task._id)}
+                  completeTaskHandler={() => completeTaskHandler(task._id)}
                 />
               ))}
             </tbody>
