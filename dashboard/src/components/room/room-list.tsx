@@ -27,6 +27,7 @@ const RoomList = () => {
             <thead>
               <tr>
                 <th>Room Name</th>
+                <th>Price</th>
                 <th>Description</th>
                 <th>Status</th>
                 <th>Date Created</th>
@@ -37,6 +38,9 @@ const RoomList = () => {
               {rooms.map((room, index) => (
                 <tr key={index} className="align-middle">
                   <td className="text-nowrap">{room.name}</td>
+                  <td className="text-nowrap">
+                    {Number(room.price).toLocaleString()}
+                  </td>
                   <td>
                     {room.description ? room.description : 'No description'}
                   </td>

@@ -24,12 +24,14 @@ router.get('/:patientId/records', async (req, res) => {
 
   const medicalRecords = await MedicalRecord.find({
     patient: patientId,
-  }).populate([
-    'vitalSigns.servedBy',
-    'clinicalNotes.servedBy',
-    'investigations.servedBy',
-    'investigations.investigation',
-  ]);
+  })
+    .populate([
+      'vitalSigns.servedBy',
+      'clinicalNotes.servedBy',
+      'investigations.servedBy',
+      'investigations.investigation',
+    ])
+    .sort({ _id: -1 });
 
   res.send(medicalRecords);
 });

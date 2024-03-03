@@ -103,13 +103,13 @@ export const AppointmentItem = ({
         >
           <EventBusyIcon />
         </button>
-        <Link
+        {/* <Link
           href={`/patients/${appointment.patient.id}/profile`}
           className="btn btn-success py-0 px-1"
           title="Patient Profile"
         >
           <PersonIcon />
-        </Link>
+        </Link> */}
       </td>
     </tr>
   );

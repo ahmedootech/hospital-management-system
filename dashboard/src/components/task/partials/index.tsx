@@ -28,7 +28,7 @@ export const TaskItem = ({
 }) => {
   return (
     <tr>
-      <td>{task.service.name}</td>
+      <td>{task.service?.name}</td>
       <td>{`${task.patient.firstName} ${task.patient.lastName}`}</td>
       <td>{`${task.staff.firstName} ${task.staff.lastName}`}</td>
       <td>{new Date(task.date).toLocaleString()}</td>

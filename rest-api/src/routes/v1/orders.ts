@@ -76,6 +76,16 @@ router.post(
   }
 );
 
+router.get('/:patientId/on-admission', async (req: Request, res: Response) => {
+  const { patientId } = req.params;
+  const ordersOnAdmission = await Order.find({
+    patient: patientId,
+    paymentMode: PaymentMethods.Admission,
+  })
+    .populate(['staff', 'patient', 'items.service'])
+    .sort({ _id: -1 });
+  res.send(ordersOnAdmission);
+});
 router.get('/payment-methods', (req, res) => {
   res.json(Object.keys(PaymentMethods));
 });

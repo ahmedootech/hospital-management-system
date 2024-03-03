@@ -4,6 +4,7 @@ import { transformDocument } from '../../services/mongoose-utils';
 interface DepartmentAttr {
   name: string;
   description?: string;
+  type?: string;
 }
 
 interface DepartmentDoc extends DepartmentAttr, mongoose.Document {}
@@ -21,6 +22,11 @@ const departmentSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    type:{
+      type: String,
+      enum: ['Default', 'Custom'],
+      default: 'Custom',
+    }
   },
   {
     timestamps: true,

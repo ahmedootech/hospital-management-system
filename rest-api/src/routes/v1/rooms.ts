@@ -13,6 +13,7 @@ router.post(
   '/',
   [
     body('name').trim().notEmpty().withMessage('Room name is required'),
+    body('price').trim().notEmpty().withMessage('Room price is required'),
     body('description').trim(),
   ],
 
@@ -23,7 +24,7 @@ router.post(
     authorization(['Manager', 'Admin']),
   ],
   async (req: Request, res: Response) => {
-    const { name, description } = req.body;
+    const { name, price, description } = req.body;
 
     const existingRoom = await Room.findOne({ name });
     if (existingRoom)
@@ -34,7 +35,7 @@ router.post(
         } as FieldValidationError,
       ]);
 
-    const room = Room.build({ name, description });
+    const room = Room.build({ name, price, description });
     await room.save();
 
     res.json(room);

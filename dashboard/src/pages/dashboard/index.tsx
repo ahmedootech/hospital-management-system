@@ -1,13 +1,14 @@
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
-import { apiV1 } from '../../utils/axios-instance';
+import { apiV1, getApiV1Instance } from '../../utils/axios-instance';
 import PageHeader from '../../layout/page-header';
 
 const Dashboard = () => {
   const [dashboards, setDashboards] = useState([]);
   const getDashboards = async () => {
     try {
-      const res = await apiV1.get('/dashboards');
+      // const res = await apiV1.get('/dashboards');
+      const res = await getApiV1Instance().get('/dashboards');
       setDashboards(res.data);
       console.log(res);
     } catch (err) {

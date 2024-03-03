@@ -43,7 +43,7 @@ const admissionSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: 'Admitted',
+      default: AdmissionStatus.Admitted,
     },
   },
   {

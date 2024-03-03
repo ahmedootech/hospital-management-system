@@ -27,7 +27,7 @@ router.get(
 
     let dashboards: DashboardProperty[] = [];
 
-    if (req.user.role !== 'Admin') {
+    if (!['Admin', 'Manager', 'Receptionist'].includes(req.user.role)) {
       dashboards = dashboards.concat([
         { label: 'Pending tasks', value: myPendingTasks.length },
         { label: 'My tasks today', value: myTodayCompletedTasks.length },

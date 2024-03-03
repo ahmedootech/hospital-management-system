@@ -19,6 +19,8 @@ const NavMenu = () => {
   const handleLogOut = () => {
     Cookies.remove('token');
     Cookies.remove('user');
+    Cookies.remove('role');
+
     router.push('/authentication/login');
   };
 

@@ -11,6 +11,7 @@ import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import FolderIcon from '@mui/icons-material/FolderCopy';
 import FolderOffIcon from '@mui/icons-material/FolderOff';
 import PersonIcon from '@mui/icons-material/Person';
+import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import BedIcon from '@mui/icons-material/Hotel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { isAuthorized } from '../../utils';
@@ -30,6 +31,7 @@ const InPatientList = () => {
     };
     getData();
   }, []);
+
   return (
     <>
       {admissions.length ? (
@@ -73,7 +75,7 @@ const InPatientList = () => {
 
                   <td className="text-nowrap">
                     <Link
-                      href={`/admissions/${admission.patient.id}`}
+                      href={`/admissions/${admission.patient.id}/history`}
                       className="btn bg-success py-0 px-1  bg-opacity-75 text-white"
                       title="Explore admission"
                     >
@@ -95,14 +97,14 @@ const InPatientList = () => {
                       </Link>
                     )}
 
-                    <Link
+                    {/* <Link
                       href={`/patients/${admission.patient.id}/profile`}
                       className="btn btn-success py-0 px-1"
                       title="Patient Profile"
                     >
                       <PersonIcon />
-                    </Link>
-                    {isAuthorized([
+                    </Link> */}
+                    {/* {isAuthorized([
                       'Admin',
                       'Manager',
                       'Receptionist',
@@ -112,9 +114,9 @@ const InPatientList = () => {
                         className="btn btn-danger py-0 px-1 mx-1 text-white"
                         title="Discharge"
                       >
-                        <FolderOffIcon />
+                        <RemoveDoneIcon />
                       </button>
-                    )}
+                    )} */}
                   </td>
                 </tr>
               ))}

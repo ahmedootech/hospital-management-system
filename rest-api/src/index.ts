@@ -42,10 +42,69 @@ const start = async () => {
     let adminDepartment = await Department.findOne({ name: 'Admin' });
 
     if (!adminDepartment) {
-      const newAdminDepartment = Department.build({ name: 'Admin' });
+      const newAdminDepartment = Department.build({
+        name: 'Admin',
+        type: 'Default',
+      });
       await newAdminDepartment.save();
 
       adminDepartment = newAdminDepartment.toJSON();
+    }
+
+    let physicianDepartment = await Department.findOne({
+      name: 'Physician',
+    });
+
+    if (!physicianDepartment) {
+      const newPhysicianDepartment = Department.build({
+        name: 'Physician',
+        type: 'Default',
+      });
+      await newPhysicianDepartment.save();
+
+      physicianDepartment = newPhysicianDepartment.toJSON();
+    }
+
+    let nursingDepartment = await Department.findOne({
+      name: 'Nursing',
+    });
+
+    if (!nursingDepartment) {
+      const newNursingDepartment = Department.build({
+        name: 'Nursing',
+        type: 'Default',
+      });
+      await newNursingDepartment.save();
+
+      nursingDepartment = newNursingDepartment.toJSON();
+    }
+
+    let laboratoryDepartment = await Department.findOne({
+      name: 'Laboratory',
+    });
+
+    if (!laboratoryDepartment) {
+      const newLaboratoryDepartment = Department.build({
+        name: 'Laboratory',
+        type: 'Default',
+      });
+      await newLaboratoryDepartment.save();
+
+      laboratoryDepartment = newLaboratoryDepartment.toJSON();
+    }
+
+    let radiographyDepartment = await Department.findOne({
+      name: 'Radiography',
+    });
+
+    if (!radiographyDepartment) {
+      const newRadiographyDepartment = Department.build({
+        name: 'Radiography',
+        type: 'Default',
+      });
+      await newRadiographyDepartment.save();
+
+      radiographyDepartment = newRadiographyDepartment.toJSON();
     }
 
     const existingAdmin = await Staff.findOne({

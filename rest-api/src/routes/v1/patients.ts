@@ -8,7 +8,11 @@ const router = Router();
 
 router.get(
   '/',
-  [currentUser, requireAuth, authorization(['Admin', 'Manager', 'Cashier'])],
+  [
+    currentUser,
+    requireAuth,
+    authorization(['Admin', 'Manager', 'Cashier', 'Receptionist']),
+  ],
   async (req: Request, res: Response) => {
     const patients = await Patient.find({}).limit(20).sort({ _id: -1 });
     res.json(patients);

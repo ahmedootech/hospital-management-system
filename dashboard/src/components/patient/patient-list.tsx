@@ -97,13 +97,13 @@ const PatientList = () => {
                         <FolderIcon />
                       </Link>
                     )}
-                    <Link
+                    {/* <Link
                       href={`/patients/${patient.id}/profile`}
                       className="btn btn-success py-0 px-1 ms-1"
                       title="Patient Profile"
                     >
                       <PersonIcon />
-                    </Link>
+                    </Link> */}
                   </td>
                 </tr>
               ))}

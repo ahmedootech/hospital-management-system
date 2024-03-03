@@ -14,7 +14,7 @@ interface companyProviderType {
   logoURL: string;
 }
 const defaultValues = {
-  companyName: 'FMH',
+  companyName: 'SALSA',
   address: {
     street: 'No 38, Nasarawa GRA',
     city: '',

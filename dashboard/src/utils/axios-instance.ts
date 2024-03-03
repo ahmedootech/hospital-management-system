@@ -9,4 +9,16 @@ export const apiV1 = axios.create({
   },
 });
 
+const createApiInstance = () => {
+  return axios.create({
+    baseURL: v1URL,
+    headers: {
+      Authorization: Cookies.get('token'),
+    },
+  });
+};
+
+export const getApiV1Instance = () => {
+  return createApiInstance();
+};
 

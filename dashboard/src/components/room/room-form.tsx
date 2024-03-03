@@ -12,11 +12,13 @@ import TextArea from '../form-controls/textarea';
 
 const defaultValues = {
   name: '',
+  price: 0,
   description: '',
 };
 const RoomForm = () => {
   const roomSchema = yup.object().shape({
     name: yup.string().required('room name is required'),
+    price: yup.number().required('price is required'),
     description: yup.string(),
   });
 
@@ -56,6 +58,20 @@ const RoomForm = () => {
             type="text"
             name="name"
             placeholder="Room name"
+            control={methods.control}
+          />
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-lg-2 d-flex align-items-center">
+          <HorizontalLabel label="Price" />
+        </div>
+        <div className="col-lg-5">
+          <Input
+            type="text"
+            name="price"
+            placeholder="Enter room price"
             control={methods.control}
           />
         </div>
