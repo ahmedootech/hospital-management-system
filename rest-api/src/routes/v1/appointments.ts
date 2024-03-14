@@ -25,7 +25,7 @@ router.post(
   ],
   [validateRequest],
   async (req: Request, res: Response) => {
-    const { patient, doctor, dateTime, type } = req.body;
+    const { patient, doctor, dateTime, type, meetingLink, duration } = req.body;
 
     const appointment = Appointment.build({
       patient,
@@ -33,6 +33,8 @@ router.post(
       type,
       dateTime,
       createdBy: req.user.id,
+      meetingLink,
+      duration,
     });
 
     await appointment.save();
@@ -137,6 +139,20 @@ router.get(
   }
 );
 
+router.get(
+  '/patient',
+  [currentUser, requireAuth],
+  async (req: Request, res: Response) => {
+    const todayEnd = endOfDay(new Date());
+    const tomorrowStart = startOfDay(addDays(new Date(), 1));
+    const appointments = await Appointment.find({
+      patient: req.user.id,
+    })
+      .populate(['patient', 'doctor', 'rescheduledAppointment'])
+      .sort({ dateTime: -1 });
+    res.json(appointments);
+  }
+);
 router.get('/statuses', (req: Request, res: Response) => {
   const statuses = Object.values(AppointmentStatus);
   res.json(statuses);

@@ -15,6 +15,25 @@ import { body } from 'express-validator';
 import { upload } from '../../common/middlewares/file-upload';
 
 const router = Router();
+router.get('/patient/records',[currentUser, requireAuth], async (req: Request, res: Response) => {
+
+
+  // const patient = await Patient.findById(patientId);
+  // if (!patient) throw new BadRequestError('Patient record not found');
+
+  const medicalRecords = await MedicalRecord.find({
+    patient: req.user.id,
+  })
+    .populate([
+      'vitalSigns.servedBy',
+      'clinicalNotes.servedBy',
+      'investigations.servedBy',
+      'investigations.investigation',
+    ])
+    .sort({ _id: -1 });
+
+  res.send(medicalRecords);
+});
 
 router.get('/:patientId/records', async (req, res) => {
   const { patientId } = req.params;
