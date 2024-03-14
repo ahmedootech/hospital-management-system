@@ -17,10 +17,10 @@ const navigation = () => {
             label: 'My Tasks',
             path: '/tasks/my-tasks',
           },
-          {
-            label: 'Recent Tasks',
-            path: '/tasks/recent-tasks',
-          },
+          // {
+          //   label: 'Recent Tasks',
+          //   path: '/tasks/recent-tasks',
+          // },
         ],
       },
     ]);

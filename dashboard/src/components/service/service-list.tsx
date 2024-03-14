@@ -37,6 +37,7 @@ const ServiceList = () => {
                 <th>Service Name</th>
                 <th>Price</th>
                 <th>Department</th>
+                <th>Description</th>
                 <th>Date Created</th>
                 <th>Options</th>
               </tr>

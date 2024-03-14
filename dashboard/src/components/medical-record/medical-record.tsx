@@ -1,11 +1,17 @@
 import RemoveIcon from '@mui/icons-material/Remove';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { imagePreview, isAuthorized, prepareImageUrl } from '../../utils';
+import { useRouter } from 'next/router';
 const MedicalRecord = ({ record }) => {
   const [showImageModal, setShowImageModal] = useState(false);
   const [imagePath, setImagePath] = useState(null);
+
+  // const router = useRouter();
+  // useEffect(() => {
+  //   if (!router.isReady) return;
+  // }, [router]);
 
   const handleCloseImageModal = () => setShowImageModal(false);
   const handleShowImageModal = () => setShowImageModal(true);

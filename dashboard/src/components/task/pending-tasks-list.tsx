@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TaskHeader, TaskItem } from './partials';
-import { apiV1 } from '../../utils/axios-instance';
+import { apiV1, getApiV1Instance } from '../../utils/axios-instance';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 
@@ -10,7 +10,7 @@ const PendingTaskList = () => {
 
   const getData = async () => {
     try {
-      const res = await apiV1.get('/tasks/pending');
+      const res = await getApiV1Instance().get('/tasks/pending');
       console.log(res);
       setTasks(res.data);
     } catch (err) {
